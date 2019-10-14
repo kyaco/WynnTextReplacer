@@ -1,16 +1,18 @@
-# Fabric Example Mod
+# Wynn Translator
+
+## About
+
+This minecraft mod translates [Wynncraft](https://wynncraft.com/) texts into your language.
+It is still under development.
 
 ## Setup
 
-1. Edit build.gradle and mod.json to suit your needs.
-    * The "mixins" object can be removed from mod.json if you do not need to use mixins.
-    * Please replace all occurences of "modid" with your own mod ID - sometimes, a different string may also suffice.
-2. Run the following command:
+This mod depends on [fabic](https://fabricmc.net/);
+fabric minecraft client is required.
+See [fabric wiki](https://fabricmc.net/wiki/start) to get it.
 
-```
-./gradlew idea
-```
+Wynn Translator mod file will be published later.
 
 ## License
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+This mod is licenced under the MIT licence. To see the full terms of the licence click [here](https://github.com/McJty/TheOneProbe/blob/1.10/LICENCE).
