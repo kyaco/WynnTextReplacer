@@ -2,7 +2,7 @@
 
 ## About
 
-This minecraft mod translates [Wynncraft](https://wynncraft.com/) texts into your language.
+This minecraft mod replaces [Wynncraft](https://wynncraft.com/) texts with translated text of your language.
 It is still under development.
 
 ## Setup
