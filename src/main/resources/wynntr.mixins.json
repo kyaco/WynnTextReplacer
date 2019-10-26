@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "net.kyaco.wynntr.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "MixinChatMessageS2CPacket",
+    "MixinLanguageManager"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

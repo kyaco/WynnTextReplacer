@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "wynntranslator",
+  "id": "wynntr",
   "version": "${version}",
 
   "name": "WynnTranslator",
-  "description": "A Minecraft mod to translate Wynncraft texts into your language!",
+  "description": "A Minecraft mod to replace Wynncraft texts with lang code!",
   "authors": [
     "kyaco"
   ],
@@ -14,23 +14,21 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/wynntr/icon.png",
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.kyaco.WynnTranslator.main"
+    "client": [
+      "net.kyaco.wynntr.WynnTextReplacer"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "wynntr.mixins.json"
   ],
 
   "depends": {
-    "fabricloader": ">=0.4.0",
-    "fabric": "*"
+    "fabricloader": ">=0.4.0"
   },
   "suggests": {
-    "flamingo": "*"
   }
 }
