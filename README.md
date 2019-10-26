@@ -1,4 +1,4 @@
-# Wynn Translator
+# Wynn Text Replacer
 
 ## About
 
