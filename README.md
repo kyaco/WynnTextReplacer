@@ -11,7 +11,7 @@ This mod depends on [fabic](https://fabricmc.net/);
 fabric minecraft client is required.
 See [fabric wiki](https://fabricmc.net/wiki/start) to get it.
 
-Wynn Translator mod file will be published later.
+Wynn Text Replacer mod file will be published later.
 
 ## License
 
