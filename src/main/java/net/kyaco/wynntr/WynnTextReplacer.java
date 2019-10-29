@@ -8,7 +8,7 @@ public class WynnTextReplacer implements ClientModInitializer
 
 	@Override
 	public void onInitializeClient() {
-		translator = new ENUSTranslationStorage("en_us");
+		translator = new ENUSTranslationStorage();
 		System.out.println("[WynnTextReplacer] Wynn Text Replacer is ready.");
 	}
 }

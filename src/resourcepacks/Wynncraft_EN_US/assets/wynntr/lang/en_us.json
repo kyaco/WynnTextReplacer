@@ -1,10 +1,60 @@
 {
-	"system.loading_wynnpack.start": "Loading the WynnPack...",
-	"system.loading_wynnpack.finish": "Thank you for using the WynnPack. Enjoy the game!",
-	"system.alert.class_change": "Your class has automatically been selected. Use /class to change your class, or /toggle autojoin to turn this feature off.",
-	"quest.king's_recruit.stage2.1": "[1/3] Tasim: So this is Wynn, huh?",
-	"quest.king's_recruit.stage2.2": "[2/3] Aledar: It looks nice. The war clearly hasn't made it this far.",
-	"quest.king's_recruit.stage2.3": "[3/3] Old Man: Hey, you three! Come over here and talk to me.",
-	"quest.king's_recruit.stage2.10": "[1/1] Tasim: Hey, kyaco! Don't leave yet, let's talk to this old man. Right-click on him to talk.",
-	"quest.king's_recruit.stage2.11": "[1/1] Tasim: Right-click on the old man to talk to him."
+	 "system.loading_wynnpack.start": "§cLoading the WynnPack...§r"
+	,"system.loading_wynnpack.finish": "§6Thank you for using the WynnPack. Enjoy the game!§r"
+	,"system.alert.class_change": "§7Your class has automatically been selected. Use /class to change your class, or /toggle autojoin to turn this feature off.§r"
+	,"system.daily_reward.reception": "§7[Daily Rewards: §r§a%1$s emeralds§r§7 and §r§b%2$s items§r§7]§r"
+	,"system.daily_reward.reception.regexp": "^§7[Daily Rewards: §r§a(\\d+) emeralds§r§7 and §r§b(\\d+) items§r§7]§r$"
+	,"system.trade.request": "§5%1$s would like to trade! Type §r§6/trade %2$s§r§5 to accept.§r"
+	,"system.trade.request.regexp": "§5(\\w+) would like to trade! Type §r§6/trade (\\w+)§r§5 to accept.§r"
+	,"system.tips.your_status": "§6[Info] §r§eLook at your own personal stats at §r§6wynncraft.com/stats/player/%1$s§r§e!§r"
+	,"system.tips.youtube": "§6[Info] §r§eWatch the official Wynncraft trailer at §r§6https://youtu.be/WiJkohJATbA§r§e!§r"
+	,"system.professions.message.mining": "§6%1$s is now level %2$s in §r§f⛏§r§6 Mining§r"
+	,"system.professions.message.mining.regexp": "§6(\\w+) is now level (\\d+) in §r§f⛏§r§6 Mining§r"
+	,"system.soulpoint.message": "§5As the sun rises, you feel a little bit safer...§r"
+	,"system.soulpoint.amount": "§d[+%1$s Soul Point]§r"
+	,"system.soulpoint.amount.regexp": "§d\\[\\+(\\d) Soul Point\\]§r"
+
+
+
+
+
+
+
+
+	,"quest.king's_recruit.stage2.1": "§7[1/3] §r§2Tasim: §r§aSo this is Wynn, huh?§r"
+	,"quest.king's_recruit.stage2.2": "§7[2/3] §r§2Aledar: §r§aIt looks nice. The war clearly hasn't made it this far.§r"
+	,"quest.king's_recruit.stage2.3": "§7[3/3] §r§2Old Man: §r§aHey, you three! Come over here and talk to me.§r"
+	,"quest.king's_recruit.stage2.10": "§7[1/1] §r§2Tasim: §r§aHey, %1$s! Don't leave yet, let's talk to this old man. §r§b§lRight-click§r§a on him to talk.§r"
+	,"quest.king's_recruit.stage2.10.regexp": "^§7\\[1/1\\] §r§2Tasim: §r§aHey, (\\w+)! Don't leave yet, let's talk to this old man. §r§b§lRight-click§r§a on him to talk.§r$"
+	,"quest.king's_recruit.stage2.11": "§7[1/1] §r§2Tasim: §r§b§lRight-click§r§a on the old man to talk to him.§r"
+
+
+
+
+
+
+
+
+
+
+
+
+	,"game_info.hud.status.N": "§c❤ %1$d/%2$d§0    §7%3$d§f N§7 %4$d    §b✺ %5$d/%6$d"
+	,"game_info.hud.status.S": "§c❤ %1$d/%2$d§0    §7%3$d§f S§7 %4$d    §b✺ %5$d/%6$d"
+	,"game_info.hud.status.E": "§c❤ %1$d/%2$d§0    §7%3$d§f E§7 %4$d    §b✺ %5$d/%6$d"
+	,"game_info.hud.status.W": "§c❤ %1$d/%2$d§0    §7%3$d§f W§7 %4$d    §b✺ %5$d/%6$d"
+	,"game_info.hud.status.NE": "§c❤ %1$d/%2$d§0    §7%3$d§f NE§7 %4$d    §b✺ %5$d/%6$d"
+	,"game_info.hud.status.NW": "§c❤ %1$d/%2$d§0    §7%3$d§f NW§7 %4$d    §b✺ %5$d/%6$d"
+	,"game_info.hud.status.SE": "§c❤ %1$d/%2$d§0    §7%3$d§f SE§7 %4$d    §b✺ %5$d/%6$d"
+	,"game_info.hud.status.SW": "§c❤ %1$d/%2$d§0    §7%3$d§f SW§7 %4$d    §b✺ %5$d/%6$d"
+	,"game_info.hud.status.N.regexp": "^§c❤ (\\d+)/(\\d+)§0    §7(\\-?\\d+)§f N§7 (\\-?\\d+)    §b✺ (\\-?\\d+)/(\\-?\\d+)$"
+	,"game_info.hud.status.S.regexp": "^§c❤ (\\d+)/(\\d+)§0    §7(\\-?\\d+)§f S§7 (\\-?\\d+)    §b✺ (\\-?\\d+)/(\\-?\\d+)$"
+	,"game_info.hud.status.E.regexp": "^§c❤ (\\d+)/(\\d+)§0    §7(\\-?\\d+)§f E§7 (\\-?\\d+)    §b✺ (\\-?\\d+)/(\\-?\\d+)$"
+	,"game_info.hud.status.W.regexp": "^§c❤ (\\d+)/(\\d+)§0    §7(\\-?\\d+)§f W§7 (\\-?\\d+)    §b✺ (\\-?\\d+)/(\\-?\\d+)$"
+	,"game_info.hud.status.NE.regexp": "^§c❤ (\\d+)/(\\d+)§0    §7(\\-?\\d+)§f NE§7 (\\-?\\d+)    §b✺ (\\-?\\d+)/(\\-?\\d+)$"
+	,"game_info.hud.status.NW.regexp": "^§c❤ (\\d+)/(\\d+)§0    §7(\\-?\\d+)§f NW§7 (\\-?\\d+)    §b✺ (\\-?\\d+)/(\\-?\\d+)$"
+	,"game_info.hud.status.SE.regexp": "^§c❤ (\\d+)/(\\d+)§0    §7(\\-?\\d+)§f SE§7 (\\-?\\d+)    §b✺ (\\-?\\d+)/(\\-?\\d+)$"
+	,"game_info.hud.status.SW.regexp": "^§c❤ (\\d+)/(\\d+)§0    §7(\\-?\\d+)§f SW§7 (\\-?\\d+)    §b✺ (\\-?\\d+)/(\\-?\\d+)$"
+	,"game_info.hud.status.sprint": "§c❤ %1$s/%2$s§0    §2[%3$s]    §b✺ %4$s/%5$s"
+	,"game_info.hud.status.sprint.regexp": "^§c❤ (\\d+)/(\\d+)§0    §([246])\\[([\\|§ace2468Sprint]+)\\]    §b✺ (\\d+)/(\\d+)$"
 }
