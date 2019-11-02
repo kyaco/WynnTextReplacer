@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.network.MessageType;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -59,8 +59,10 @@ public class ENUSTranslationStorage extends TranslationStorage {
 				return text;
 			}
 		}
-		return tryToFixEvents(text, translatableText);
+		return tryToFixEvents(text, translatableText, location);
 	}
+
+
 	private TranslatableText tryNormalReplace(Text text) {
 		String formattedString = text.asFormattedString();
 		String text_id = rawReversDict.get(formattedString);
@@ -81,50 +83,61 @@ public class ENUSTranslationStorage extends TranslationStorage {
 		}
 		return null;
 	}
-	private Text tryToFixEvents(Text text, TranslatableText translatableText) {
-		List<Text> clickEventTexts = GetTextWithStyle(text, (s)->{return s.getClickEvent() != null;});
-		List<Text> hoverEventTexts = GetTextWithStyle(text, (s)->{return s.getHoverEvent() != null;});
-		List<Text> insertionTexts = GetTextWithStyle(text, (s)->{return s.getInsertion() != null;});
-		if (clickEventTexts.size() == 0 && hoverEventTexts.size() == 0 && insertionTexts.size() == 0) return translatableText;
 
-		String str[] = translatableText.asFormattedString().split("§r");
-		List<Text> splitText = new ArrayList<Text>();
+	private Text tryToFixEvents(Text text, TranslatableText translatableText, MessageType location) {
+		List<Text> eventTexts = GetEventTexts(text);
+		if (eventTexts.size() == 0) return translatableText;
 
-		System.out.println("----------------------");
-		for(String s: str) {
-			Text t = new LiteralText(s);
-			splitText.add(new LiteralText(s));
-			System.out.println("str: " + s);
+		List<Text> rawTexts = new ArrayList<Text>();
+		for (String str: translatableText.asFormattedString().split("§r *")) {
+			if (str.matches("^$")) continue;
+			rawTexts.add(new LiteralText(str + "§r"));
 		}
-		System.out.println("----");
-		System.out.println(text);
-		// for (Text t: clickEventTexts) {
-		// 	System.out.println(t.getStyle().getClickEvent());
-		// }
-		System.out.println("----------------------");
+		return getEventMatchedText(rawTexts, eventTexts);
+	}
+	
+	private Text getEventMatchedText(List<Text> rawTexts, List<Text> eventTexts) {
+		Text root = new LiteralText("");
+		for (Text raw: rawTexts) {
+			for (Text event: eventTexts) {
+				if (event.asFormattedString().equals(raw.asFormattedString())){
+					Style rawStyle = raw.getStyle();
+					Style eventStyle = event.getStyle();
+					rawStyle.setClickEvent(eventStyle.getClickEvent());
+					rawStyle.setInsertion(eventStyle.getInsertion());
+					if (eventStyle.getHoverEvent() != null) {
+						HoverEvent.Action action = eventStyle.getHoverEvent().getAction();
+						Text showText = eventStyle.getHoverEvent().getValue();
+						showText = ReverseTranslate(showText, null);
+						rawStyle.setHoverEvent(new HoverEvent(action, showText));
+					}
+				}
+			}
+			root.append(raw);
+		}
+		return root;
+	}
 
-		
-		return translatableText;
-	}
-	private void recordUnregisterdText(Text text, MessageType location) {
-		System.out.println("[wynntr:unregisterd text of " + location + "] \"" + text.asFormattedString() + "\"");
-		System.out.println("[wynntr:unicode escape version]" + convertToUnicode(text.asFormattedString()));
-	}
-	private List<Text> GetTextWithStyle(Text text, Function<Style, Boolean> function) {
-		List<Text> resultTexts = new ArrayList<Text>();
+	private List<Text> GetEventTexts(Text text) {
+		List<Text> eventTexts = new ArrayList<Text>();
 		Queue<Text> q = new LinkedList<Text>();
 		q.add(text);
 		while(!q.isEmpty()) {
 			Text head = q.poll();
 			for(Text child: head.getSiblings()) q.add(child);
-			
+			if (head.getString().matches("^ *$")) continue;
 			Style style = head.getStyle();
 			if (style == null) continue;
-			if (function.apply(style)) resultTexts.add(head);
+			if (style.getClickEvent() != null || style.getHoverEvent() != null || style.getInsertion() != null) eventTexts.add(head);
 		}
-		return resultTexts;
+		return eventTexts;
 	}
 
+	private void recordUnregisterdText(Text text, MessageType location) {
+		String str = text.asFormattedString().replace("\\", "\\\\").replace("\n", "\\n");
+		System.out.println("[wynntr:unregisterd text of " + location + "] \"" + str + "\"");
+		System.out.println("[wynntr:unicode escape version]" + convertToUnicode(str));
+	}
 	private static String convertToUnicode(String original)
 	{
 		StringBuilder sb = new StringBuilder();
