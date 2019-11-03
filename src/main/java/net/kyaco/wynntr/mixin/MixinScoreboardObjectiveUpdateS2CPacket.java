@@ -7,20 +7,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.kyaco.wynntr.WynnTextReplacer;
-import net.minecraft.client.network.packet.ChatMessageS2CPacket;
+import net.minecraft.client.network.packet.ScoreboardObjectiveUpdateS2CPacket;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.text.Text;
 import net.minecraft.util.PacketByteBuf;
 
-@Mixin(ChatMessageS2CPacket.class)
-abstract public class MixinChatMessageS2CPacket implements Packet<ClientPlayPacketListener>
+@Mixin(ScoreboardObjectiveUpdateS2CPacket.class)
+abstract public class MixinScoreboardObjectiveUpdateS2CPacket implements Packet<ClientPlayPacketListener>
 {
-	@Shadow private Text message;
-
+	@Shadow private Text displayName;
+	@Shadow private int mode;
+	
 	@Inject(method = "read", at = @At("RETURN"))
 	public void readMixin(PacketByteBuf packetBytebuf, CallbackInfo ci)
 	{
-		message = WynnTextReplacer.translator.ReverseTranslate(message);
+		if (mode == 0 || mode == 2) displayName = WynnTextReplacer.translator.ReverseTranslate(displayName);
 	}
 }

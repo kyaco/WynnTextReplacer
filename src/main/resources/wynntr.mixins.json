@@ -6,7 +6,9 @@
   ],
   "client": [
     "MixinChatMessageS2CPacket",
-    "MixinLanguageManager"
+    "MixinLanguageManager",
+    "MixinScoreboardObjectiveUpdateS2CPacket",
+    "MixinScoreboardPlayerUpdateS2CPacket"
   ],
   "injectors": {
     "defaultRequire": 1

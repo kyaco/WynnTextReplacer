@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.TranslationStorage;
-import net.minecraft.network.MessageType;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.LiteralText;
@@ -44,7 +43,7 @@ public class ENUSTranslationStorage extends TranslationStorage {
 		}
 		System.out.println("[WynnTextReplacer] Reloaded text maps.");
 	}
-	public Text ReverseTranslate(Text text, MessageType location) {
+	public Text ReverseTranslate(Text text) {
 		if (!"Wynncraft".equals(MinecraftClient.getInstance().getCurrentServerEntry().name))
 			return text;
 
@@ -55,11 +54,15 @@ public class ENUSTranslationStorage extends TranslationStorage {
 			translatableText = tryRegexpReplace(text);
 			if (translatableText == null)
 			{
-				recordUnregisterdText(text, location);
+				recordUnregisterdText(text);
 				return text;
 			}
 		}
-		return tryToFixEvents(text, translatableText, location);
+		return tryToFixEvents(text, translatableText);
+	}
+	public String ReverseTranslate(String str) {
+		Text t = new LiteralText(str);
+		return ReverseTranslate(t).getString();
 	}
 
 
@@ -84,7 +87,7 @@ public class ENUSTranslationStorage extends TranslationStorage {
 		return null;
 	}
 
-	private Text tryToFixEvents(Text text, TranslatableText translatableText, MessageType location) {
+	private Text tryToFixEvents(Text text, TranslatableText translatableText) {
 		List<Text> eventTexts = GetEventTexts(text);
 		if (eventTexts.size() == 0) return translatableText;
 
@@ -108,7 +111,7 @@ public class ENUSTranslationStorage extends TranslationStorage {
 					if (eventStyle.getHoverEvent() != null) {
 						HoverEvent.Action action = eventStyle.getHoverEvent().getAction();
 						Text showText = eventStyle.getHoverEvent().getValue();
-						showText = ReverseTranslate(showText, null);
+						showText = ReverseTranslate(showText);
 						rawStyle.setHoverEvent(new HoverEvent(action, showText));
 					}
 				}
@@ -133,9 +136,9 @@ public class ENUSTranslationStorage extends TranslationStorage {
 		return eventTexts;
 	}
 
-	private void recordUnregisterdText(Text text, MessageType location) {
+	private void recordUnregisterdText(Text text) {
 		String str = text.asFormattedString().replace("\\", "\\\\").replace("\n", "\\n");
-		System.out.println("[wynntr:unregisterd text of " + location + "] \"" + str + "\"");
+		System.out.println("[wynntr:unregisterd text]\"" + str + "\"");
 		System.out.println("[wynntr:unicode escape version]" + convertToUnicode(str));
 	}
 	private static String convertToUnicode(String original)
