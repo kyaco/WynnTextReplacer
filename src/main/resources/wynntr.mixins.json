@@ -8,7 +8,8 @@
     "MixinChatMessageS2CPacket",
     "MixinLanguageManager",
     "MixinScoreboardObjectiveUpdateS2CPacket",
-    "MixinScoreboardPlayerUpdateS2CPacket"
+    "MixinScoreboardPlayerUpdateS2CPacket",
+    "MixinInventoryS2CPacket"
   ],
   "injectors": {
     "defaultRequire": 1
