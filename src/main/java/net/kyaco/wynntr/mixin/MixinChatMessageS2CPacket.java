@@ -21,6 +21,6 @@ abstract public class MixinChatMessageS2CPacket implements Packet<ClientPlayPack
 	@Inject(method = "read", at = @At("RETURN"))
 	public void readMixin(PacketByteBuf packetBytebuf, CallbackInfo ci)
 	{
-		message = WynnTextReplacer.translator.ReverseTranslate(message);
+		message = WynnTextReplacer.reverseTranslateChatText(message);
 	}
 }

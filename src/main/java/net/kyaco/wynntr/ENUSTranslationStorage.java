@@ -60,11 +60,6 @@ public class ENUSTranslationStorage extends TranslationStorage {
 		}
 		return tryToFixEvents(text, translatableText);
 	}
-	public String ReverseTranslate(String str) {
-		Text t = new LiteralText(str);
-		return ReverseTranslate(t).getString();
-	}
-
 
 	private TranslatableText tryNormalReplace(Text text) {
 		String formattedString = text.asFormattedString();

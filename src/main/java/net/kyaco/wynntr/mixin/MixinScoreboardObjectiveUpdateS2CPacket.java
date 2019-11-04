@@ -22,6 +22,6 @@ abstract public class MixinScoreboardObjectiveUpdateS2CPacket implements Packet<
 	@Inject(method = "read", at = @At("RETURN"))
 	public void readMixin(PacketByteBuf packetBytebuf, CallbackInfo ci)
 	{
-		if (mode == 0 || mode == 2) displayName = WynnTextReplacer.translator.ReverseTranslate(displayName);
+		if (mode == 0 || mode == 2) displayName = WynnTextReplacer.reverseTranslateScoreboardObjective(displayName);
 	}
 }

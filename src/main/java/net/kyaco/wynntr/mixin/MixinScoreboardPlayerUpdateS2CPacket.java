@@ -20,6 +20,6 @@ abstract public class MixinScoreboardPlayerUpdateS2CPacket implements Packet<Cli
 	@Inject(method = "read", at = @At("RETURN"))
 	public void readMixin(PacketByteBuf packetBytebuf, CallbackInfo ci)
 	{
-		this.playerName = WynnTextReplacer.translator.ReverseTranslate(this.playerName);
+		this.playerName = WynnTextReplacer.reverseTranslateScoreboardPlayer(this.playerName);
 	}
 }
