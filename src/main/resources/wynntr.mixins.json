@@ -9,7 +9,7 @@
     "MixinLanguageManager",
     "MixinScoreboardObjectiveUpdateS2CPacket",
     "MixinScoreboardPlayerUpdateS2CPacket",
-    "MixinInventoryS2CPacket"
+    "MixinGuiSlotUpdateS2CPacket"
   ],
   "injectors": {
     "defaultRequire": 1
