@@ -8,7 +8,7 @@ Wynncraft hard-coded texts<br>
 ↓<br>
 ↓ [replacement]<br>
 ↓<br>
-translation keys<br><br>
+translation keys<br>
 ↓<br>
 ↓ [minecraft normal translation]<br>
 ↓<br>
