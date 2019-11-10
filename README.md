@@ -4,14 +4,14 @@
 
 This mod replaces [Wynncraft](https://wynncraft.com/) texts into translation keys so that minecraft client translate them when rendering texts.
 
-Wynncraft hard-coded texts
-↓
-↓ [replacement]
-↓
-translation keys
-↓
-↓ [minecraft normal translation]
-↓
+Wynncraft hard-coded texts<br>
+↓<br>
+↓ [replacement]<br>
+↓<br>
+translation keys<br><br>
+↓<br>
+↓ [minecraft normal translation]<br>
+↓<br>
 Wynncraft texts in Your language
 
 ## Setup
