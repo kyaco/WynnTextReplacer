@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.options.ServerEntry;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +27,8 @@ public class WynnTextReplacer implements ClientModInitializer
 	}
 
 	private static boolean isOnTargetServer() {
-		return MinecraftClient.getInstance().getCurrentServerEntry().name.equals("Wynncraft");
+		String address = MinecraftClient.getInstance().getCurrentServerEntry().address;
+		return address != null && address.equals("play.wynncraft.net");
 	}
 
 	public static Text reverseTranslateChatText(Text rawText) {
