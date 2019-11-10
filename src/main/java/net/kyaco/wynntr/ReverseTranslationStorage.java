@@ -57,6 +57,11 @@ public class ReverseTranslationStorage extends TranslationStorage {
 
 
 
+	public String ReverseTranslate(String string, String context) {
+		Text t = new LiteralText(string);
+		t = ReverseTranslate(t, context);
+		return t.asString();
+	}
 
 	public Text ReverseTranslate(Text text, String context) {
 		if (text == null) return text;
@@ -73,6 +78,9 @@ public class ReverseTranslationStorage extends TranslationStorage {
 		}
 		return tryToFixEvents(text, translatableText);
 	}
+
+
+
 
 	private TranslatableText tryNormalReplace(Text text) {
 		String formattedString = text.asFormattedString();
@@ -153,6 +161,7 @@ public class ReverseTranslationStorage extends TranslationStorage {
 	}
 	
 	public void outputUnregistered(String str, String context) {
+		str = str.replaceAll("\n", "\\n");
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("wynntr.shareit.txt", true), "UTF-8"));) {
 			String hash = DigestUtils.sha1Hex(str);
 			bw.write("\"");

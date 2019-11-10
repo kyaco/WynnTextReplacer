@@ -9,10 +9,11 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.WrittenBookItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 public class WynnTextReplacer implements ClientModInitializer
@@ -42,8 +43,7 @@ public class WynnTextReplacer implements ClientModInitializer
 
 	public static String reverseTranslateScoreboardPlayer(String playerName) {
 		if (!isOnTargetServer()) return playerName;
-		Text t = new LiteralText(playerName);
-		return translator.ReverseTranslate(t, "scoreboard_player").getString();
+		return translator.ReverseTranslate(playerName, "scoreboard_player");
 	}
 
 	public static void reverseTranslateSlotStacks(ItemStack stack) {
@@ -61,15 +61,24 @@ public class WynnTextReplacer implements ClientModInitializer
 			disp.putString("Name", newNameStr);
 		}
 
-		ListTag loreList = disp.getList("Lore", 8);
-		for (int i = 0; i < loreList.size(); i++) {
-			String loreStr = loreList.getString(i);
+		translateListTag(root, "Lore", "item_lore");
+		if (stack.getItem() == Items.WRITTEN_BOOK) {
+			if(WrittenBookItem.isValid(root)) {
+				translateListTag(root, "pages", "written_book_page");
+			}
+		}
+	}
+
+	private static void translateListTag(CompoundTag tag, String listTagName, String context) {
+		ListTag listtag = tag.getList(listTagName, 8);
+		for (int i = 0; i < listtag.size(); i++) {
+			String loreStr = listtag.getString(i);
 			try {
-				Text loreText = Text.Serializer.fromJson(loreStr);
-				if (loreText != null) {
-					Text newLoreText = translator.ReverseTranslate(loreText, "item_lore");
-					String newLoreStr = Text.Serializer.toJson(newLoreText);
-					loreList.setTag(i, new StringTag(newLoreStr));
+				Text oldText = Text.Serializer.fromJson(loreStr);
+				if (oldText != null) {
+					Text newText = translator.ReverseTranslate(oldText, context);
+					String newLoreStr = Text.Serializer.toJson(newText);
+					listtag.setTag(i, new StringTag(newLoreStr));
 				}
 			} catch(JsonParseException e) {
 				e.printStackTrace();
@@ -120,4 +129,5 @@ public class WynnTextReplacer implements ClientModInitializer
 
 	// PlayerListHeaderS2CPacket.class
 	// TeamS2CPacket.class
+	// book title and auther
 }
