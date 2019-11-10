@@ -7,11 +7,12 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,12 +25,11 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Pair;
 
 public class ReverseTranslationStorage extends TranslationStorage {
 	private Map<String, String> rawReversDict = new HashMap<String, String>();
 	private Map<Pattern, String> regxpReversDict = new HashMap<Pattern, String>();
-	private LinkedHashSet<Pair<String, String>> unregisteredStrings = new LinkedHashSet<Pair<String, String>>();
+	private Set<String> unregisteredStrings = new HashSet<String>();
 
 	private final Pattern REGXP_KEY_PATTERN = Pattern.compile("^(.+)\\.regexp$");
 
@@ -38,6 +38,7 @@ public class ReverseTranslationStorage extends TranslationStorage {
 
 		rawReversDict.clear();
 		regxpReversDict.clear();
+		unregisteredStrings.clear();
 
 		for (Map.Entry<String, String> entry : this.translations.entrySet()) {
 			Matcher m = REGXP_KEY_PATTERN.matcher(entry.getKey());
@@ -145,17 +146,14 @@ public class ReverseTranslationStorage extends TranslationStorage {
 
 	private void recordUnregisterdText(Text text, String context) {
 		String str = text.asFormattedString();
-		Pair<String, String> pair = new Pair<String, String>(str, context);
-		if(unregisteredStrings.contains(pair)) return;
+		if(unregisteredStrings.contains(str)) return;
 
-		unregisteredStrings.add(pair);
-		outputUnregistered(pair);
+		unregisteredStrings.add(str);
+		outputUnregistered(str, context);
 	}
 	
-	public void outputUnregistered(Pair<String, String> pair) {
+	public void outputUnregistered(String str, String context) {
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("wynntr.shareit.txt", true), "UTF-8"));) {
-			String str = pair.getLeft();
-			String context = pair.getRight();
 			String hash = DigestUtils.sha1Hex(str);
 			bw.write("\"");
 			bw.write(context);
