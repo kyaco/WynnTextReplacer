@@ -50,4 +50,4 @@ Clone the en_us.json, rename, remove the regexp lines and translate components.
 
 ## License
 
-This mod is licenced under the MIT licence. To see the full terms of the licence click [here](https://github.com/McJty/TheOneProbe/blob/1.10/LICENCE).
+This mod is licenced under the MIT licence, see LICENSE.txt.

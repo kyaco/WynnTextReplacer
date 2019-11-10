@@ -13,7 +13,7 @@
     "sources": "https://github.com/kyaco/WynnTextReplacer"
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT License",
   "icon": "assets/wynntr/icon.png",
 
   "environment": "*",
