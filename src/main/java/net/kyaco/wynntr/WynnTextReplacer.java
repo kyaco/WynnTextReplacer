@@ -7,7 +7,6 @@ import com.google.gson.JsonParseException;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.ServerEntry;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
