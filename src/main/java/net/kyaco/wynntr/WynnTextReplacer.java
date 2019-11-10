@@ -1,8 +1,13 @@
 package net.kyaco.wynntr;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.google.gson.JsonParseException;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -12,29 +17,36 @@ import net.minecraft.text.Text;
 
 public class WynnTextReplacer implements ClientModInitializer
 {
-	public static ENUSTranslationStorage translator;
+	public static ReverseTranslationStorage translator;
 
 	@Override
 	public void onInitializeClient() {
-		translator = new ENUSTranslationStorage();
+		translator = new ReverseTranslationStorage();
 		System.out.println("[WynnTextReplacer] Wynn Text Replacer is ready.");
 	}
 
+	private static boolean isOnTargetServer() {
+		return MinecraftClient.getInstance().getCurrentServerEntry().name.equals("Wynncraft");
+	}
+
 	public static Text reverseTranslateChatText(Text rawText) {
-		return translator.ReverseTranslate(rawText);
+		if (!isOnTargetServer()) return rawText;
+		return translator.ReverseTranslate(rawText, "chat");
 	}
 
 	public static Text reverseTranslateScoreboardObjective(Text displayName) {
-		return translator.ReverseTranslate(displayName);
+		if (!isOnTargetServer()) return displayName;
+		return translator.ReverseTranslate(displayName, "scoreboard_objective");
 	}
 
 	public static String reverseTranslateScoreboardPlayer(String playerName) {
+		if (!isOnTargetServer()) return playerName;
 		Text t = new LiteralText(playerName);
-		return translator.ReverseTranslate(t).getString();
+		return translator.ReverseTranslate(t, "scoreboard_player").getString();
 	}
 
 	public static void reverseTranslateSlotStacks(ItemStack stack) {
-		System.out.println("stack = " + stack);
+		if (!isOnTargetServer()) return;
 		CompoundTag root = stack.getTag();
 		if (root == null) return;
 		if (!root.containsKey("display", 10)) return;
@@ -43,7 +55,7 @@ public class WynnTextReplacer implements ClientModInitializer
 		if (disp.containsKey("Name", 8)) {
 			String nameStr = disp.getString("Name");
 			Text nameText = Text.Serializer.fromJson(nameStr);
-			Text newNameText = translator.ReverseTranslate(nameText);
+			Text newNameText = translator.ReverseTranslate(nameText, "item_name");
 			String newNameStr = Text.Serializer.toJson(newNameText);
 			disp.putString("Name", newNameStr);
 		}
@@ -54,7 +66,7 @@ public class WynnTextReplacer implements ClientModInitializer
 			try {
 				Text loreText = Text.Serializer.fromJson(loreStr);
 				if (loreText != null) {
-					Text newLoreText = translator.ReverseTranslate(loreText);
+					Text newLoreText = translator.ReverseTranslate(loreText, "item_lore");
 					String newLoreStr = Text.Serializer.toJson(newLoreText);
 					loreList.setTag(i, new StringTag(newLoreStr));
 				}
@@ -63,4 +75,48 @@ public class WynnTextReplacer implements ClientModInitializer
 			}
 		}
 	}
+
+	public static Text reverseTranslateContainerName(Text name) {
+		if (!isOnTargetServer()) return name;
+		return translator.ReverseTranslate(name, "container_name");
+	}
+
+	public static void reverseTranslateEntityCustomName(List<DataTracker.Entry<?>> trackedValues) {
+		if (!isOnTargetServer()) return;
+		for(int i = 0; i < trackedValues.size(); i++) {
+			DataTracker.Entry<?> entry = trackedValues.get(i);
+			Object maybeOptionalObj = entry.get();
+			
+			try {
+				@SuppressWarnings("unchecked")
+				Optional<Object> optionalRawText = (Optional<Object>) maybeOptionalObj;
+				if (!optionalRawText.isPresent()) return;
+				Object maybetext = optionalRawText.get();
+				if (!(maybetext instanceof Text)) return;
+				Text rawText = (Text) maybetext;
+
+				Text text = WynnTextReplacer.translator.ReverseTranslate(rawText, "entity_name");
+				Optional<Text> optionalText = Optional.of(text);
+				@SuppressWarnings("all")
+				DataTracker.Entry<Optional<Text>> nentry = new DataTracker.Entry(entry.getData(), optionalText);
+				trackedValues.set(i, nentry);
+			}catch(ClassCastException e) {
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static Text reverseTranslateBossBar(Text name) {
+		if (!isOnTargetServer()) return name;
+		return translator.ReverseTranslate(name, "boss_bar");
+	}
+
+	public static Text reverseTranslateTitleText(Text text) {
+		if (!isOnTargetServer()) return text;
+		return translator.ReverseTranslate(text, "title");
+	}
+
+	// PlayerListHeaderS2CPacket.class
+	// TeamS2CPacket.class
 }

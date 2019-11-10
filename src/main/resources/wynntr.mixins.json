@@ -5,11 +5,15 @@
   "mixins": [
   ],
   "client": [
-    "MixinChatMessageS2CPacket",
     "MixinLanguageManager",
+    "MixinChatMessageS2CPacket",
+    "MixinGuiSlotUpdateS2CPacket",
+    "MixinOpenContainerPacket",
+    "MixinEntityTrackerUpdateS2CPacket",
+    "MixinTitleS2CPacket",
     "MixinScoreboardObjectiveUpdateS2CPacket",
     "MixinScoreboardPlayerUpdateS2CPacket",
-    "MixinGuiSlotUpdateS2CPacket"
+    "MixinBossBarS2CPacket"
   ],
   "injectors": {
     "defaultRequire": 1

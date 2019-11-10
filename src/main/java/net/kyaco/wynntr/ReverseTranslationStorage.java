@@ -1,8 +1,13 @@
 package net.kyaco.wynntr;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +15,8 @@ import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.minecraft.client.MinecraftClient;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.text.HoverEvent;
@@ -18,10 +24,12 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Pair;
 
-public class ENUSTranslationStorage extends TranslationStorage {
+public class ReverseTranslationStorage extends TranslationStorage {
 	private Map<String, String> rawReversDict = new HashMap<String, String>();
 	private Map<Pattern, String> regxpReversDict = new HashMap<Pattern, String>();
+	private LinkedHashSet<Pair<String, String>> unregisteredStrings = new LinkedHashSet<Pair<String, String>>();
 
 	private final Pattern REGXP_KEY_PATTERN = Pattern.compile("^(.+)\\.regexp$");
 
@@ -43,10 +51,14 @@ public class ENUSTranslationStorage extends TranslationStorage {
 		}
 		System.out.println("[WynnTextReplacer] Reloaded text maps.");
 	}
-	public Text ReverseTranslate(Text text) {
-		if (!"Wynncraft".equals(MinecraftClient.getInstance().getCurrentServerEntry().name))
-			return text;
 
+
+
+
+
+
+	public Text ReverseTranslate(Text text, String context) {
+		if (text == null) return text;
 		TranslatableText translatableText;
 		translatableText = tryNormalReplace(text);
 		if (translatableText == null)
@@ -54,7 +66,7 @@ public class ENUSTranslationStorage extends TranslationStorage {
 			translatableText = tryRegexpReplace(text);
 			if (translatableText == null)
 			{
-				recordUnregisterdText(text);
+				recordUnregisterdText(text, context);
 				return text;
 			}
 		}
@@ -106,7 +118,7 @@ public class ENUSTranslationStorage extends TranslationStorage {
 					if (eventStyle.getHoverEvent() != null) {
 						HoverEvent.Action action = eventStyle.getHoverEvent().getAction();
 						Text showText = eventStyle.getHoverEvent().getValue();
-						showText = ReverseTranslate(showText);
+						showText = ReverseTranslate(showText, "show_text");
 						rawStyle.setHoverEvent(new HoverEvent(action, showText));
 					}
 				}
@@ -131,23 +143,29 @@ public class ENUSTranslationStorage extends TranslationStorage {
 		return eventTexts;
 	}
 
-	private void recordUnregisterdText(Text text) {
-		String str = text.asFormattedString().replace("\\", "\\\\").replace("\n", "\\n");
-		System.out.println("[wynntr:unregisterd text]\"" + str + "\"");
-		System.out.println("[wynntr:unicode escape version]" + convertToUnicode(str));
+	private void recordUnregisterdText(Text text, String context) {
+		String str = text.asFormattedString();
+		Pair<String, String> pair = new Pair<String, String>(str, context);
+		if(unregisteredStrings.contains(pair)) return;
+
+		unregisteredStrings.add(pair);
+		outputUnregistered(pair);
 	}
-	private static String convertToUnicode(String original)
-	{
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < original.length(); i++) {
-			int code = Character.codePointAt(original, i);
-			if (code < 128 || code == 167) {
-				sb.append(original.charAt(i));
-				continue;
-			}
-			sb.append(String.format("\\u%04X", code));
+	
+	public void outputUnregistered(Pair<String, String> pair) {
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("wynntr.shareit.txt", true), "UTF-8"));) {
+			String str = pair.getLeft();
+			String context = pair.getRight();
+			String hash = DigestUtils.sha1Hex(str);
+			bw.write("\"");
+			bw.write(context);
+			bw.write(".");
+			bw.write(hash);
+			bw.write("\": \"");
+			bw.write(str);
+			bw.write("\",\n");
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
-		String unicode = sb.toString();
-		return unicode;
 	}
 }
