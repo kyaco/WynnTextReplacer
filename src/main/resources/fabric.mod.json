@@ -3,14 +3,14 @@
   "id": "wynntr",
   "version": "${version}",
 
-  "name": "WynnTranslator",
+  "name": "WynnTextReplacer",
   "description": "A Minecraft mod to replace Wynncraft texts with lang code!",
   "authors": [
     "kyaco"
   ],
   "contact": {
     "homepage": "https://twitter.com/kyacof",
-    "sources": "https://github.com/kyaco/WynnTranslator"
+    "sources": "https://github.com/kyaco/WynnTextReplacer"
   },
 
   "license": "CC0-1.0",
