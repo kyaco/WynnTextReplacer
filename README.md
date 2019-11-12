@@ -50,4 +50,4 @@ Clone the en_us.json, rename, remove the regexp lines and translate components.
 
 ## License
 
-This mod is licenced under the MIT licence, see LICENSE.txt.
+This mod is licenced under the MIT licence, see LICENSE.
