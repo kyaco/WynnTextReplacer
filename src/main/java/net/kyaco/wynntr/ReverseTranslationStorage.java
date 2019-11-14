@@ -1,9 +1,5 @@
 package net.kyaco.wynntr;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,8 +12,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.text.HoverEvent;
@@ -34,7 +29,7 @@ public class ReverseTranslationStorage extends TranslationStorage {
 	private final Pattern REGXP_KEY_PATTERN = Pattern.compile("^(.+)\\.regexp$");
 
 	public void apply(ResourceManager rm) {
-		super.load(rm, Arrays.asList("en_us"));
+		super.load(rm, Arrays.asList("wynntr"));
 
 		rawReversDict.clear();
 		regxpReversDict.clear();
@@ -155,24 +150,10 @@ public class ReverseTranslationStorage extends TranslationStorage {
 	private void recordUnregisterdText(Text text, String context) {
 		String str = text.asFormattedString();
 		if(unregisteredStrings.contains(str)) return;
-
 		unregisteredStrings.add(str);
-		outputUnregistered(str, context);
-	}
-	
-	public void outputUnregistered(String str, String context) {
-		str = str.replaceAll("\n", "\\n");
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("wynntr.shareit.txt", true), "UTF-8"));) {
-			String hash = DigestUtils.sha1Hex(str);
-			bw.write("\"");
-			bw.write(context);
-			bw.write(".");
-			bw.write(hash);
-			bw.write("\": \"");
-			bw.write(str);
-			bw.write("\",\n");
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+		
+		String langCode = MinecraftClient.getInstance().getLanguageManager().getLanguage().getCode();
+		ResourcepackWriter.addTranslationLine("WynnTextReplacer", "wynntr", str, context);
+		ResourcepackWriter.addTranslationLine("WynnTextReplacer", langCode, str, context);
 	}
 }
