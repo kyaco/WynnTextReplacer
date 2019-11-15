@@ -26,7 +26,6 @@ public class ResourcepackWriter
 		m.put(context + "." + hash, str);
 		String json = gson.toJson(m);
 		String line = ",\r\n\t" + json.replaceFirst("^\\{", "");
-		line = convertToUnicode(line);
 		
 		try (RandomAccessFile raf = new RandomAccessFile(file, "rw");) {
 			byte lineBytes[] = line.getBytes("UTF-8");
@@ -61,15 +60,5 @@ public class ResourcepackWriter
 			return false;
 		}
 		return true;
-	}
-	private static String convertToUnicode(String original)
-	{
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < original.length(); i++) {
-			int code = Character.codePointAt(original, i);
-			sb.append((code < 128 || code == 167)? original.charAt(i): String.format("\\u%04X", Character.codePointAt(original, i)));
-		}
-		String unicode = sb.toString();
-		return unicode;
 	}
 }

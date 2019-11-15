@@ -153,7 +153,7 @@ public class ReverseTranslationStorage extends TranslationStorage {
 		unregisteredStrings.add(str);
 		
 		String langCode = MinecraftClient.getInstance().getLanguageManager().getLanguage().getCode();
-		ResourcepackWriter.addTranslationLine("WynnTextReplacer", "wynntr", str, context);
-		ResourcepackWriter.addTranslationLine("WynnTextReplacer", langCode, str, context);
+		ResourcepackWriter.addTranslationLine("WynnText", "wynntr", str, context);
+		ResourcepackWriter.addTranslationLine("WynnText", langCode, str, context);
 	}
 }
