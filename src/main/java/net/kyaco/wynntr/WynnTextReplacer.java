@@ -28,7 +28,8 @@ public class WynnTextReplacer implements ClientModInitializer
 
 	private static boolean isOnTargetServer() {
 		String address = MinecraftClient.getInstance().getCurrentServerEntry().address;
-		return address != null && address.equals("play.wynncraft.net");
+		if (address == null) return false;
+		return address.equals("play.wynncraft.com") || address.equals("play.wynncraft.net");
 	}
 
 	public static Text reverseTranslateChatText(Text rawText) {
