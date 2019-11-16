@@ -61,10 +61,10 @@ public class WynnTextReplacer implements ClientModInitializer
 			disp.putString("Name", newNameStr);
 		}
 
-		translateListTag(root, "Lore", "item_lore");
+		translateListTag(disp, "Lore", "item_lore");
 		if (stack.getItem() == Items.WRITTEN_BOOK) {
-			if(WrittenBookItem.isValid(root)) {
-				translateListTag(root, "pages", "written_book_page");
+			if(WrittenBookItem.isValid(disp)) {
+				translateListTag(disp, "pages", "written_book_page");
 			}
 		}
 	}
