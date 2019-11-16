@@ -22,10 +22,9 @@ You have to get the following components.
 * WynnTextReplacer mod jar file.
 	* You can download it at [WynnTextReplacer in CurseForge](https://www.curseforge.com/minecraft/mc-mods/wynntextreplacer).
 * Resource packs.
-	* You have to get 2 resource packs.
-	* One contains en_us.json file refered to replace wynncraft hard-coded texts into translation keys.
-	* Onother has <YOUR_LANGUAGE_CODE>.json file which minecraft refers to translate.
-	* Download link coming soon!
+	* Get [WynnText.zip for WynnTextReplacer](https://github.com/kyaco/WynnText/blob/master/WynnText.zip).
+	* _wynntr.json_ file is refered to replace wynncraft hard-coded texts into translation keys.
+	* _YOUR_LANGUAGE_CODE.json_ file is refered by minecraft to translate.
 
 1. Create FabricMC instance in MultiMC launcher.
 2. Click the _Edit Instance_ button on the right side.
@@ -36,17 +35,16 @@ You have to get the following components.
 
 ## How to make resource packs
 
-### en_us.json
+上記のSetup手順はMODとリソースパックを利用してWynncraftを遊ぶ場合のものです。
+リソースパックを作成するときは、WynnText.zipそのまま.minecraft/resourcepacksフォルダに配置するのではなくて、
+__解凍してから__配置してください。
+翻訳の手順は以下のようになります。
 
-WynnTextReplacer will record unregistered target text of translation and output them as a text file.
-Some texts need to be edited to regexp format when they have player name or variable numbers in it.
-
-Detail will be added later.
-
-
-### [YOUR_LANGUAGE_CODE].json
-
-Clone the en_us.json, rename, remove the regexp lines and translate components.
+1. Wynncraftをプレイしていてwynntr.jsonファイルに未登録のテキストを表示させてください。
+2. wynntr.jsonファイルとYOUR_LANGUAGE_CODE.jsonファイルに新規の置換データが追記されます。
+3. YOUR_LANGUAGE_CODE.jsonファイルの文章を翻訳されたものに書き換えます。
+4. F3+Tでリソースパックをリロードしてください。
+5. 対象のテキストを再表示して正しく置換できたか確認してください(一度離れて近づく、サーバーに入り直す等)。
 
 ## License
 
