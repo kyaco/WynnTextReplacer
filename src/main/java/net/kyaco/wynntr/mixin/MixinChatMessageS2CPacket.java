@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.kyaco.wynntr.WynnTextReplacer;
 import net.minecraft.client.network.packet.ChatMessageS2CPacket;
+import net.minecraft.network.MessageType;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.text.Text;
@@ -17,10 +18,18 @@ import net.minecraft.util.PacketByteBuf;
 abstract public class MixinChatMessageS2CPacket implements Packet<ClientPlayPacketListener>
 {
 	@Shadow private Text message;
+	@Shadow private MessageType location;
 
 	@Inject(method = "read", at = @At("RETURN"))
 	public void readMixin(PacketByteBuf packetBytebuf, CallbackInfo ci)
 	{
-		message = WynnTextReplacer.reverseTranslateChatText(message);
+		if (location == MessageType.GAME_INFO)
+		{
+			message = WynnTextReplacer.reverseTranslateTitleText(message);
+		}
+		else
+		{
+			message = WynnTextReplacer.reverseTranslateChatText(message);
+		}
 	}
 }

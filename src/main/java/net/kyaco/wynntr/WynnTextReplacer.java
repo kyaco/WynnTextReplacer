@@ -14,6 +14,7 @@ import net.minecraft.item.WrittenBookItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 public class WynnTextReplacer implements ClientModInitializer
@@ -125,7 +126,8 @@ public class WynnTextReplacer implements ClientModInitializer
 
 	public static Text reverseTranslateTitleText(Text text) {
 		if (!isOnTargetServer()) return text;
-		return translator.ReverseTranslate(text, "title");
+		if (text == null) return null;
+		return new LiteralText(translator.ReverseTranslate(text, "title").asString());
 	}
 
 	// PlayerListHeaderS2CPacket.class

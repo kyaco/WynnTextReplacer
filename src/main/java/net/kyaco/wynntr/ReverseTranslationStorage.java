@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 
 public class ReverseTranslationStorage extends TranslationStorage {
 	private Map<String, String> rawReversDict = new HashMap<String, String>();
@@ -60,6 +63,7 @@ public class ReverseTranslationStorage extends TranslationStorage {
 
 	public Text ReverseTranslate(Text text, String context) {
 		if (text == null) return text;
+
 		TranslatableText translatableText;
 		translatableText = tryNormalReplace(text);
 		if (translatableText == null)
@@ -71,8 +75,16 @@ public class ReverseTranslationStorage extends TranslationStorage {
 				return text;
 			}
 		}
-		return tryToFixEvents(text, translatableText);
+		if ("chat".equals(context) || "written_book_page".equals(context))
+		{
+			List<Text> eventTexts = getEventTexts(text);
+			List<Text> deformattedTexts = asDeformatedTexts(translatableText);
+			Text ret = getEventMatchedText(deformattedTexts, eventTexts);
+			return ret;
+		}
+		return translatableText;
 	}
+
 
 
 
@@ -98,18 +110,50 @@ public class ReverseTranslationStorage extends TranslationStorage {
 		return null;
 	}
 
-	private Text tryToFixEvents(Text text, TranslatableText translatableText) {
-		List<Text> eventTexts = GetEventTexts(text);
-		if (eventTexts.size() == 0) return translatableText;
-
+	private List<Text> asDeformatedTexts(TranslatableText translatableText) {
 		List<Text> rawTexts = new ArrayList<Text>();
-		for (String str: translatableText.asFormattedString().split("§r *")) {
-			if (str.matches("^$")) continue;
-			rawTexts.add(new LiteralText(str + "§r"));
+		Set<Character> styleCharas = new LinkedHashSet<>();
+
+		String strlist[] = translatableText.asString().split("§");
+
+		if (strlist[0].length() > 0)
+		{
+			rawTexts.add(new LiteralText(strlist[0]));
 		}
-		return getEventMatchedText(rawTexts, eventTexts);
+		for (int i = 1; i < strlist.length; i++) {
+			String str = strlist[i];
+			if (str.length() == 0) continue;
+
+			char styleChar = str.charAt(0);
+			String content = str.substring(1);
+
+			if (styleChar == 'r'){
+				styleCharas.clear();
+			} else {
+				styleCharas.remove(styleChar);
+				styleCharas.add(styleChar);
+			}
+			if (content.length() > 0) {
+				LiteralText t = new LiteralText(content);
+				Style s = new Style();
+				Iterator<Character> it = styleCharas.iterator();
+				while(it.hasNext()) {
+					Character c = it.next();
+					switch (c) {
+						case 'k': s.setObfuscated(true); break;
+						case 'l': s.setBold(true); break;
+						case 'm': s.setStrikethrough(true); break;
+						case 'n': s.setUnderline(true); break;
+						case 'o': s.setItalic(true); break;
+						default: s.setColor(Formatting.byCode(c));
+					}
+				}
+				t.setStyle(s);
+				rawTexts.add(t);
+			}
+		}
+		return rawTexts;
 	}
-	
 	private Text getEventMatchedText(List<Text> rawTexts, List<Text> eventTexts) {
 		Text root = new LiteralText("");
 		for (Text raw: rawTexts) {
@@ -132,14 +176,14 @@ public class ReverseTranslationStorage extends TranslationStorage {
 		return root;
 	}
 
-	private List<Text> GetEventTexts(Text text) {
+	private List<Text> getEventTexts(Text text) {
 		List<Text> eventTexts = new ArrayList<Text>();
 		Queue<Text> q = new LinkedList<Text>();
 		q.add(text);
 		while(!q.isEmpty()) {
 			Text head = q.poll();
 			for(Text child: head.getSiblings()) q.add(child);
-			if (head.getString().matches("^ *$")) continue;
+			if (head.getString().matches("^$")) continue;
 			Style style = head.getStyle();
 			if (style == null) continue;
 			if (style.getClickEvent() != null || style.getHoverEvent() != null || style.getInsertion() != null) eventTexts.add(head);
