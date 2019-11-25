@@ -44,22 +44,21 @@ __解凍してから__配置してください。
 	* ./minecraft/resourcepacks/WynnText/pack.mcmeta
 	~~~
 	{
-    	"pack": {
-    	    "pack_format": 4,
-    	    "description": "Wynncraft text for WynnTextReplacer. version *"
-    	},
-    	"language": {
-        	"wynntr": {
-            	"name": "WynnText",
-            	"region": "wynncraft"
-        	}
-    	}
+		"pack": {
+			"pack_format": 4,
+			"description": "Wynncraft text for WynnTextReplacer. version *"
+		},
+		"language": {
+			"wynntr": {
+				"name": "WynnText",
+				"region": "wynncraft"
+			}
+		}
 	}
 	~~~
 	* ./minecraft/resourcepacks/WynnText/assets/minecraft/lang/wynntr.json
 	~~~
-	{
-		"_":""}
+	{"_":""}
 	~~~
 2. 言語設定に WynnText というものが追加されているので選択する。
 3. ゲームをプレイすると wynntr.json にゲーム内のテキストが記録されていく。
