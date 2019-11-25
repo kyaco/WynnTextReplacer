@@ -6,15 +6,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.text.HoverEvent;
@@ -62,25 +59,23 @@ public class ReverseTranslationStorage extends TranslationStorage {
 	}
 
 	public Text ReverseTranslate(Text text, String context) {
-		if (text == null) return text;
+		if (text == null) return null;
 
+		String formattedString = asFormattedString(text);
 		TranslatableText translatableText;
-		translatableText = tryNormalReplace(text);
+		translatableText = tryNormalReplace(formattedString);
 		if (translatableText == null)
 		{
-			translatableText = tryRegexpReplace(text);
+			translatableText = tryRegexpReplace(formattedString);
 			if (translatableText == null)
 			{
-				recordUnregisterdText(text, context);
+				recordUnregisterdText(formattedString, context);
 				return text;
 			}
 		}
 		if ("chat".equals(context) || "written_book_page".equals(context))
 		{
-			List<Text> eventTexts = getEventTexts(text);
-			List<Text> deformattedTexts = asDeformatedTexts(translatableText);
-			Text ret = getEventMatchedText(deformattedTexts, eventTexts);
-			return ret;
+			return getEventMatchedText(translatableText, text);
 		}
 		return translatableText;
 	}
@@ -89,14 +84,12 @@ public class ReverseTranslationStorage extends TranslationStorage {
 
 
 
-	private TranslatableText tryNormalReplace(Text text) {
-		String formattedString = text.asFormattedString();
+	private TranslatableText tryNormalReplace(String formattedString) {
 		String text_id = rawReversDict.get(formattedString);
 		if (text_id != null) return new TranslatableText(text_id);
 		return null;
 	}
-	private TranslatableText tryRegexpReplace(Text text) {
-		String formattedString = text.asFormattedString();
+	private TranslatableText tryRegexpReplace(String formattedString) {
 		for (Map.Entry<Pattern, String> entry : this.regxpReversDict.entrySet()) {
 			Matcher m = entry.getKey().matcher(formattedString);
 			if (!m.matches())
@@ -110,7 +103,49 @@ public class ReverseTranslationStorage extends TranslationStorage {
 		return null;
 	}
 
-	private List<Text> asDeformatedTexts(TranslatableText translatableText) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	 private Text getEventMatchedText(Text translatableText, Text text) {
+		List<Text> rawTexts = asDeformatedTexts(translatableText);
+		List<Text> eventTexts = getEventTexts(text);
+		Text root = new LiteralText("");
+		for (Text raw: rawTexts) {
+			for (Text event: eventTexts) {
+				if (event.asFormattedString().equals(raw.asFormattedString())){
+					Style rawStyle = raw.getStyle();
+					Style eventStyle = event.getStyle();
+					rawStyle.setClickEvent(eventStyle.getClickEvent());
+					rawStyle.setInsertion(eventStyle.getInsertion());
+					if (eventStyle.getHoverEvent() != null) {
+						HoverEvent.Action action = eventStyle.getHoverEvent().getAction();
+						Text showText = eventStyle.getHoverEvent().getValue();
+						showText = ReverseTranslate(showText, "show_text");
+						rawStyle.setHoverEvent(new HoverEvent(action, showText));
+					}
+				}
+			}
+			root.append(raw);
+		}
+		return root;
+	}
+	private List<Text> asDeformatedTexts(Text translatableText) {
 		List<Text> rawTexts = new ArrayList<Text>();
 		Set<Character> styleCharas = new LinkedHashSet<>();
 
@@ -154,50 +189,59 @@ public class ReverseTranslationStorage extends TranslationStorage {
 		}
 		return rawTexts;
 	}
-	private Text getEventMatchedText(List<Text> rawTexts, List<Text> eventTexts) {
-		Text root = new LiteralText("");
-		for (Text raw: rawTexts) {
-			for (Text event: eventTexts) {
-				if (event.asFormattedString().equals(raw.asFormattedString())){
-					Style rawStyle = raw.getStyle();
-					Style eventStyle = event.getStyle();
-					rawStyle.setClickEvent(eventStyle.getClickEvent());
-					rawStyle.setInsertion(eventStyle.getInsertion());
-					if (eventStyle.getHoverEvent() != null) {
-						HoverEvent.Action action = eventStyle.getHoverEvent().getAction();
-						Text showText = eventStyle.getHoverEvent().getValue();
-						showText = ReverseTranslate(showText, "show_text");
-						rawStyle.setHoverEvent(new HoverEvent(action, showText));
-					}
-				}
-			}
-			root.append(raw);
-		}
-		return root;
-	}
 
 	private List<Text> getEventTexts(Text text) {
 		List<Text> eventTexts = new ArrayList<Text>();
-		Queue<Text> q = new LinkedList<Text>();
-		q.add(text);
-		while(!q.isEmpty()) {
-			Text head = q.poll();
-			for(Text child: head.getSiblings()) q.add(child);
-			if (head.getString().matches("^$")) continue;
-			Style style = head.getStyle();
+		Iterator<Text> it = text.stream().iterator();
+		while(it.hasNext()) {
+			Text t = it.next();
+			if (t.getString().length() == 0) continue;
+			Style style = t.getStyle();
 			if (style == null) continue;
-			if (style.getClickEvent() != null || style.getHoverEvent() != null || style.getInsertion() != null) eventTexts.add(head);
+			if (style.getClickEvent() != null || style.getHoverEvent() != null || style.getInsertion() != null) eventTexts.add(t);
 		}
 		return eventTexts;
 	}
 
-	private void recordUnregisterdText(Text text, String context) {
-		String str = text.asFormattedString();
-		if(unregisteredStrings.contains(str)) return;
-		unregisteredStrings.add(str);
-		
-		String langCode = MinecraftClient.getInstance().getLanguageManager().getLanguage().getCode();
-		ResourcepackWriter.addTranslationLine("WynnText", "wynntr", str, context);
-		ResourcepackWriter.addTranslationLine("WynnText", langCode, str, context);
+
+
+
+
+
+
+
+
+
+
+	private void recordUnregisterdText(String formattedString, String context) {
+		if(unregisteredStrings.contains(formattedString)) return;
+		unregisteredStrings.add(formattedString);
+		ResourcepackWriter.addTranslationLine("WynnText", "wynntr", formattedString, context);
 	}
+
+	private String asFormattedString(Text text) {
+		StringBuilder sb = new StringBuilder();
+		String oldStyle = "";
+		Iterator<Text> it = text.stream().iterator();
+  
+		while(it.hasNext()) {
+		   Text t = it.next();
+		   String str = t.asString().replaceAll("%", "%%");
+		   if (!str.isEmpty()) {
+				String style = t.getStyle().asString();
+				if (!oldStyle.isEmpty()) {
+					sb.append(Formatting.RESET);
+				}
+				sb.append(style);
+				oldStyle = style;
+				sb.append(str);
+		   }
+		}
+  
+		if (!oldStyle.isEmpty()) {
+		   sb.append(Formatting.RESET);
+		}
+  
+		return sb.toString();
+	 }
 }
