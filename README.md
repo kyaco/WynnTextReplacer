@@ -40,11 +40,36 @@ You have to get the following components.
 __解凍してから__配置してください。
 翻訳の手順は以下のようになります。
 
-1. Wynncraftをプレイしていてwynntr.jsonファイルに未登録のテキストを表示させてください。
-2. wynntr.jsonファイルとYOUR_LANGUAGE_CODE.jsonファイルに新規の置換データが追記されます。
-3. YOUR_LANGUAGE_CODE.jsonファイルの文章を翻訳されたものに書き換えます。
-4. F3+Tでリソースパックをリロードしてください。
-5. 対象のテキストを再表示して正しく置換できたか確認してください(一度離れて近づく、サーバーに入り直す等)。
+1. 空のリソースパックを用意する。最小の構成は次の2ファイル。
+	* ./minecraft/resourcepacks/WynnText/pack.mcmeta
+	~~~
+	{
+    	"pack": {
+    	    "pack_format": 4,
+    	    "description": "Wynncraft text for WynnTextReplacer. version *"
+    	},
+    	"language": {
+        	"wynntr": {
+            	"name": "WynnText",
+            	"region": "wynncraft"
+        	}
+    	}
+	}
+	~~~
+	* ./minecraft/resourcepacks/WynnText/assets/minecraft/lang/wynntr.json
+	~~~
+	{
+		"_":""}
+	~~~
+2. 言語設定に WynnText というものが追加されているので選択する。
+3. ゲームをプレイすると wynntr.json にゲーム内のテキストが記録されていく。
+4. wynntr.json を同階層に ja_jp.json という名前で複製して内容を翻訳する。
+	* 基本は単純な全文置き換えを行う。
+	* 数値やプレイヤー名等を含み全文置き換えで対応できない場合は正規表現を使用する。
+	* キーを複製して末尾に.regexpをつけると、元のキーとセットで正規表現・置換対象文字列として機能する。
+	* 詳しく説明していないので、既存のリソパを参考にしてください。
+	* クリックやホバーイベントは装飾コード・テキスト内容が完全一致する場合にオリジナルのイベントを再割り当てします。
+5. 言語設定を 日本語 にして遊ぶと翻訳が反映される。
 
 ## License
 
