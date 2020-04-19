@@ -35,12 +35,10 @@ You have to get the following components.
 
 ## How to make resource packs
 
-上記のSetup手順はMODとリソースパックを利用してWynncraftを遊ぶ場合のものです。
-リソースパックを作成するときは、WynnText.zipそのまま.minecraft/resourcepacksフォルダに配置するのではなくて、
-__解凍してから__配置してください。
-翻訳の手順は以下のようになります。
+The above process is just to use this mod to play Wynncraft in translated.
+If you want to make resource pack, follow below constructions.
 
-1. 空のリソースパックを用意する。最小の構成は次の2ファイル。
+1. Make empty resource pack. The minimum constitution is 2 files; pack.mcmeta and wynntr.json.
 	* ./minecraft/resourcepacks/WynnText/pack.mcmeta
 	~~~
 	{
@@ -60,15 +58,17 @@ __解凍してから__配置してください。
 	~~~
 	{"_":""}
 	~~~
-2. 言語設定に WynnText というものが追加されているので選択する。
-3. ゲームをプレイすると wynntr.json にゲーム内のテキストが記録されていく。
-4. wynntr.json を同階層に ja_jp.json という名前で複製して内容を翻訳する。
-	* 基本は単純な全文置き換えを行う。
-	* 数値やプレイヤー名等を含み全文置き換えで対応できない場合は正規表現を使用する。
-	* キーを複製して末尾に.regexpをつけると、元のキーとセットで正規表現・置換対象文字列として機能する。
-	* 詳しく説明していないので、既存のリソパを参考にしてください。
-	* クリックやホバーイベントは装飾コード・テキスト内容が完全一致する場合にオリジナルのイベントを再割り当てします。
-5. 言語設定を 日本語 にして遊ぶと翻訳が反映される。
+2. Launch minecraft and activate WynnText resource pack.
+3. Select "WynnText" in Language select screen.
+4. Play wynncraft and in-game texts with formatting code are added into the wynntr.json file.
+5. Copy wynntr.json and rename it to <YOUR_LANG_CODE>.json (ex. Japanese: ja_jp, French: fr_fr).
+6. Translate the content.
+	* Basically, do a simple full-text translation.
+	* You may use regular expression to translate numbers or player names.
+	* Duplicate a key-value pair and add ".regexp" to the end of the key, the value will work as a regular expression.
+	* Hmm... it is hard to explain in English for me, please see existing resource pack.
+	* Click events or hover events will works only if the formatting codes of in game text and resource pack text are completely same.
+6. Select your language in minecraft setting and you will see translated text in your wynncraft.
 
 ## License
 
